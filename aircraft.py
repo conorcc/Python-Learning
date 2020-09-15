@@ -85,34 +85,44 @@ class Flight:
             for letter in seat_letters:
                 passenger = self._seating[row][letter]
                 if passenger is not None:
-                    yield (passenger, f"{row}{letter}")
+                    yield passenger, f"{row}{letter}"
+
+class Aeroplane:
+    def __init__(self, registration):
+        self._registration = registration
+
+    def registration(self):
+        return self._registration
 
 
-class Aircraft:
-    def __init__(self, reg, model, num_rows, num_seats):
-        self._reg = reg
-        self._model = model
-        self._num_rows = num_rows
-        self._num_seats = num_seats
-
-    def reg(self):
-        return self._reg
-
+class Boeing777(Aeroplane):
     def model(self):
-        return self._model
+        return 'Boeing777'
 
     def seating_plan(self):
-        return (range(1, self._num_rows + 1),
-                "ABCDEFGHJK"[:self._num_seats])
+        return range(1, 22), 'ABCDEFGHJ'
 
 
-def create_flight():
-    plane = Aircraft('2020-D-12', 'Boeing227', num_rows=22, num_seats=6)
-    a = Flight('GB2277', plane)
-    a.allocate_seat('21B', 'John')
-    a.allocate_seat('11A', 'Henry')
-    a.relocate_passenger('21B', '11B')
-    a.boarding_pass(card_printer)
+class Boeing254(Aeroplane):
+    def model(self):
+        return 'Boeing254'
+
+    def seating_plan(self):
+        return range(1, 44), 'ABCDEFGHJ'
+
+
+def create_flights():
+    f = Flight('BA123', Boeing777('G-EUPT'))
+    f.allocate_seat('14B', 'John Henry')
+    f.allocate_seat('14A', 'Mary Henry')
+    f.allocate_seat('14C', 'Paddy Henry')
+
+    g = Flight('BA123', Boeing254('G-EUPT'))
+    g.allocate_seat('20D', 'John Henry')
+    g.allocate_seat('20E', 'Mary Henry')
+    g.allocate_seat('20F', 'Paddy Henry')
+
+    return f,g
 
 
 def card_printer(passenger, seat, flight_number, aircraft):
@@ -126,4 +136,3 @@ def card_printer(passenger, seat, flight_number, aircraft):
     card = "\n".join(lines)
     print(card)
     print()
-
